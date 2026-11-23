@@ -14,6 +14,10 @@ public class TestContext {
     public void startBrowser() {
         String browser = ConfigReader.getProperty("browser");
         ChromeOptions options = new ChromeOptions();
+        if(Boolean.parseBoolean(ConfigReader.getProperty("headless"))) {
+            options.addArguments("--headless=new");
+            options.addArguments("--window-size=1920,1080");
+        }
 
         options.setExperimentalOption("prefs", Map.of(
                 "profile.password_manager_leak_detection", false,
