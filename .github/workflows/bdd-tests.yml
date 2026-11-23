@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [master]
   workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Cucumber tags to run'
+        required: true
+        default: '@smoke'
+        type: string
 
 permissions:
   contents: read
@@ -27,7 +33,9 @@ jobs:
           cache: maven
 
       - name: Run tests
-        run: mvn --batch-mode clean test
+        env:
+          CUCUMBER_TAGS: ${{ inputs.tags || '@smoke or @regression' }}
+        run: mvn --batch-mode clean test "-Dcucumber.filter.tags=$CUCUMBER_TAGS"
 
       - name: Upload test reports
         if: always()
